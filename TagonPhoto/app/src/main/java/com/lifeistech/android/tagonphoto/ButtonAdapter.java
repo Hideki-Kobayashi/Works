@@ -46,7 +46,7 @@ public class ButtonAdapter extends ArrayAdapter<Button> {
         final Button item = getItem(position);
 
         if (item != null){
-            viewHolder.newImageButton.setText(item.content);
+         //   viewHolder.newImageButton.setText(item.content);
         }
 
         return convertView;

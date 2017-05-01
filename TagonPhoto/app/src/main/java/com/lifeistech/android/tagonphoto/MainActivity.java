@@ -1,7 +1,9 @@
 package com.lifeistech.android.tagonphoto;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -25,10 +27,14 @@ public class MainActivity extends AppCompatActivity {
         mButtons.add(new MemoButton("+"));
         mButtons.add(new MemoButton("Note"));
 
-        mButtonAdapter = new ButtonAdapter(this, R.layout.activity_memo_button, mButtons);
-        mListView.setAdapter(mButtonAdapter);
+        //mButtonAdapter = new ButtonAdapter(this, R.layout.activity_memo_button, mButtons);
+        //mListView.setAdapter(mButtonAdapter);
 
     }
 
+    public void click(View v) {
+        Intent i = new Intent(getApplication(), MemoActivity.class);
+        startActivity(i);
+    }
 
 }
