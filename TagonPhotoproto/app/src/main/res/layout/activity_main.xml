@@ -11,13 +11,15 @@
     tools:context="com.lifeistech.android.tagonphotoproto.MainActivity">
 
     <FrameLayout
+        android:id="@+id/framelayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/picture"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_gravity="top|center_horizontal"/>
 
         <ImageView
             android:id="@+id/tag0"
