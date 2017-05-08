@@ -80,6 +80,8 @@ public class MemoActivity extends AppCompatActivity {
                         Log.d("touch", "up");
                         x = motionEvent.getX();
                         y = motionEvent.getY();
+                        Log.d("X", String.valueOf(x));
+                        Log.d("Y", String.valueOf(y));
                         addView(0);
                         break;
                 }
@@ -127,6 +129,7 @@ public class MemoActivity extends AppCompatActivity {
         */
 
 
+
         /*
         //画像を表示するImageViewに付箋のドラッグを監視させる
         picture.setOnDragListener(new View.OnDragListener() {
@@ -139,6 +142,7 @@ public class MemoActivity extends AppCompatActivity {
                     case DragEvent.ACTION_DROP:
                         x = dragEvent.getX();
                         y = dragEvent.getY();
+                        Log.d("picture", "getAxis");
                         break;
                     case DragEvent.ACTION_DRAG_ENTERED:
                         flag = true;
@@ -147,7 +151,8 @@ public class MemoActivity extends AppCompatActivity {
                 }
                 return true;
             }
-        });*/
+        });
+        */
 
     }
 
@@ -177,8 +182,8 @@ public class MemoActivity extends AppCompatActivity {
         frame.addView(image, tags[tagNum].getWidth(), tags[tagNum].getHeight());
         Log.d("tag"+ String.valueOf(tagNum), "addView");
 
-        image.setTranslationX(x - (tags[tagNum].getWidth()) / 2);
-        image.setTranslationY(y - (tags[tagNum].getHeight()) / 2);
+        image.setTranslationX(x);
+        image.setTranslationY(y);
         Log.d("tag"+ String.valueOf(tagNum), "Translation");
 
 
