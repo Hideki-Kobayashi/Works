@@ -64,7 +64,6 @@ public class MemoActivity extends AppCompatActivity {
         startActivityForResult(imageintent, REQUEST_ORIGIN);
 
         //付箋にタッチ時の動きをセット
-
         tags[0].setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -131,14 +130,6 @@ public class MemoActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-        /*
-        ImageView dragView = (ImageView) findViewById(R.id.tag0);
-        DragViewListener listener = new DragViewListener(dragView);
-        dragView.setOnTouchListener(listener);
-        */
     }
 
     @Override
@@ -157,58 +148,22 @@ public class MemoActivity extends AppCompatActivity {
     }
 
 
-
-
-
     public void addView(final int tagNum){
         final EditText editText = new EditText(this);
 
-
-        //int [] location = new int[2];
         final ImageView image = new ImageView(getApplicationContext());
         image.setImageResource(getResources().getIdentifier("fusen" + tagNum, "drawable", getPackageName()));
-
-
-
-
-        /*
-        image.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                tagName = tagNames[tagNum];
-                ClipData data = ClipData.newPlainText("fusen" + tagNum, "drag");
-                view.startDrag(data, new View.DragShadowBuilder(view), view, 0);
-                return false;
-            }
-        });
-
-        image.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View view, DragEvent dragEvent) {
-
-                tagName = tagNames[tagNum];
-                ClipData data = ClipData.newPlainText("fusen" + tagNum, "drag");
-                view.startDrag(data, new View.DragShadowBuilder(view), view, 0);
-
-                return false;
-            }
-        });
-        */
-
-
 
         frame.addView(image, tags[tagNum].getWidth(), tags[tagNum].getHeight());
         image.setTranslationX(x - (tags[tagNum].getWidth()) / 2);
         image.setTranslationY(y - (tags[tagNum].getHeight()) / 2);
-        //image.getLocationInWindow(location);
 
-        ImageView dragView = (ImageView) findViewById()
+        //動的にIDを指定したい
+        ImageView dragView = (ImageView) findViewById(R.id)
         DragViewListener listener = new DragViewListener(dragView);
         dragView.setOnTouchListener(listener);
 
-
-
-
+        //付箋にEditTextを出す
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -223,6 +178,7 @@ public class MemoActivity extends AppCompatActivity {
             }
         });
 
+        /*
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -230,6 +186,7 @@ public class MemoActivity extends AppCompatActivity {
                 return false;
             }
         });
+        */
 
 
 
@@ -240,12 +197,14 @@ public class MemoActivity extends AppCompatActivity {
 
     }
 
+
     public class DragViewListener implements View.OnTouchListener {
         // ドラッグ対象のView
         private ImageView dragView;
         // ドラッグ中に移動量を取得するための変数
         private int oldx;
         private int oldy;
+
         public DragViewListener(ImageView dragView) {
             this.dragView = dragView;
         }
@@ -256,15 +215,20 @@ public class MemoActivity extends AppCompatActivity {
             int y = (int) event.getRawY();
             switch (event.getAction()) {
                 case MotionEvent.ACTION_MOVE:
+
                     // 今回イベントでのView移動先の位置
                     int left = dragView.getLeft() + (x - oldx);
                     int top = dragView.getTop() + (y - oldy);
+
                     // Viewを移動する
                     dragView.layout(left, top, left + dragView.getWidth(), top + dragView.getHeight());
                     break;
-            }    // 今回のタッチ位置を保持
+            }
+
+            // 今回のタッチ位置を保持
             oldx = x;
             oldy = y;
+
             // イベント処理完了
             return true;
         }
