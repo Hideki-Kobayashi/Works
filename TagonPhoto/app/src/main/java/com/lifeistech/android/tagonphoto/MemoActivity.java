@@ -8,9 +8,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,10 +67,24 @@ public class MemoActivity extends AppCompatActivity {
         tags[0].setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                tagName = "small";
-                ClipData data = ClipData.newPlainText("fusen0", "drag");
-                view.startDrag(data, new View.DragShadowBuilder(view), view, 0);
-                return false;
+
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        Log.d("touch", "down");
+                        tagName = "small";
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        Log.d("touch", "move");
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        Log.d("touch", "up");
+                        x = motionEvent.getX();
+                        y = motionEvent.getY();
+                        addView(0);
+                        break;
+                }
+                //return false だと動かない
+                return true;
             }
         });
 
@@ -84,12 +98,14 @@ public class MemoActivity extends AppCompatActivity {
             }
         });
 
+        /*
         //付箋をドロップした時の動きをセット
         for (int i = 0; i < 2; i++){
             tags[i].setOnDragListener(new View.OnDragListener() {
                 @Override
                 public boolean onDrag(View view, DragEvent dragEvent) {
                     if(dragEvent.getAction() == DragEvent.ACTION_DRAG_ENDED) {
+                        Log.d("tag", "drag");
                         if (flag) {
                             switch (tagName) {
                                 case "small":
@@ -108,7 +124,10 @@ public class MemoActivity extends AppCompatActivity {
                 }
             });
         }
+        */
 
+
+        /*
         //画像を表示するImageViewに付箋のドラッグを監視させる
         picture.setOnDragListener(new View.OnDragListener() {
             @Override
@@ -128,9 +147,10 @@ public class MemoActivity extends AppCompatActivity {
                 }
                 return true;
             }
-        });
+        });*/
 
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -150,31 +170,33 @@ public class MemoActivity extends AppCompatActivity {
 
     public void addView(final int tagNum){
         final EditText editText = new EditText(this);
-
         final ImageView image = new ImageView(getApplicationContext());
+
         image.setImageResource(getResources().getIdentifier("fusen" + tagNum, "drawable", getPackageName()));
 
         frame.addView(image, tags[tagNum].getWidth(), tags[tagNum].getHeight());
+        Log.d("tag"+ String.valueOf(tagNum), "addView");
+
         image.setTranslationX(x - (tags[tagNum].getWidth()) / 2);
         image.setTranslationY(y - (tags[tagNum].getHeight()) / 2);
+        Log.d("tag"+ String.valueOf(tagNum), "Translation");
 
-        //動的にIDを指定したい
-        ImageView dragView = (ImageView) findViewById(R.id)
-        DragViewListener listener = new DragViewListener(dragView);
-        dragView.setOnTouchListener(listener);
+
 
         //付箋にEditTextを出す
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                editText.setText("sample");
-                FrameLayout.LayoutParams editTextParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-                editText.setLayoutParams(editTextParams);
+                if(frame == null){
+                    editText.setHint("text");
+                    FrameLayout.LayoutParams editTextParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+                    editText.setLayoutParams(editTextParams);
 
-                frame.addView(editText);
-                editText.setTranslationX(x - (tags[tagNum].getWidth()) / 3);
-                editText.setTranslationY(y - (tags[tagNum].getHeight()) / 2);
+                    frame.addView(editText);
+                    editText.setTranslationX(x - (tags[tagNum].getWidth()) / 3);
+                    editText.setTranslationY(y - (tags[tagNum].getHeight()) / 2);
+                }
             }
         });
 
@@ -189,10 +211,9 @@ public class MemoActivity extends AppCompatActivity {
         */
 
 
-
-
-
-
+        ImageView dragView = image;
+        DragViewListener listener = new DragViewListener(dragView);
+        dragView.setOnTouchListener(listener);
 
 
     }
@@ -201,6 +222,7 @@ public class MemoActivity extends AppCompatActivity {
     public class DragViewListener implements View.OnTouchListener {
         // ドラッグ対象のView
         private ImageView dragView;
+
         // ドラッグ中に移動量を取得するための変数
         private int oldx;
         private int oldy;
@@ -209,7 +231,8 @@ public class MemoActivity extends AppCompatActivity {
             this.dragView = dragView;
         }
 
-        @Override  public boolean onTouch(View view, MotionEvent event) {
+        @Override
+        public boolean onTouch(View view, MotionEvent event) {
             // タッチしている位置取得
             int x = (int) event.getRawX();
             int y = (int) event.getRawY();
@@ -230,7 +253,7 @@ public class MemoActivity extends AppCompatActivity {
             oldy = y;
 
             // イベント処理完了
-            return true;
+            return false;
         }
     }
 
