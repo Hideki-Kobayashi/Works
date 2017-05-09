@@ -32,16 +32,13 @@ import java.util.ArrayList;
 public class MemoActivity extends AppCompatActivity {
 
     int picnum = 0;
-    String tagName;
     FrameLayout frame;
     private ImageView [] tags = new ImageView[2];
-    boolean flag = false;
+
     public static ImageView picture;
     float x;
     float y;
     int REQUEST_ORIGIN = 0;
-    String [] tagNames = {"small", "medium"};
-    //private EditText editText;
 
     int clickFlag = 0;
     int tagCounter = 0;
@@ -68,57 +65,13 @@ public class MemoActivity extends AppCompatActivity {
         imageintent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(imageintent, REQUEST_ORIGIN);
 
-        //付箋にタッチ時の動きをセット
-        tags[0].setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+        ImageView dragView0 = tags[0];
+        DragViewListener listener0 = new DragViewListener(dragView0);
+        dragView0.setOnTouchListener(listener0);
 
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.d("touch", "down");
-                        tagName = "small";
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        Log.d("touch", "move");
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        Log.d("touch", "up");
-                        x = view.getX();
-                        y = view.getY();
-                        addView(0);
-
-                        break;
-                }
-                //return false だと動かない
-                return true;
-            }
-        });
-
-
-
-        tags[1].setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.d("touch", "down");
-                        tagName = "medium";
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        Log.d("touch", "move");
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        Log.d("touch", "up");
-                        x = view.getX();
-                        y = view.getY();
-                        addView(1);
-                        break;
-                }
-                //return false だと動かない
-                return true;
-            }
-        });
+        ImageView dragView1 = tags[1];
+        DragViewListener listener1 = new DragViewListener(dragView1);
+        dragView1.setOnTouchListener(listener1);
 
     }
 
@@ -142,7 +95,6 @@ public class MemoActivity extends AppCompatActivity {
     public void addView(final int tagNum){
         final EditText editText = new EditText(this);
         final ImageView image = new ImageView(getApplicationContext());
-        //ArrayList<ImageView> images = new ArrayList<ImageView>();
 
         image.setImageResource(getResources().getIdentifier("fusen" + tagNum, "drawable", getPackageName()));
         frame.addView(image, tags[tagNum].getWidth(), tags[tagNum].getHeight());
@@ -150,17 +102,14 @@ public class MemoActivity extends AppCompatActivity {
         ImageView dragView = image;
         DragViewListener listener = new DragViewListener(dragView);
         dragView.setOnTouchListener(listener);
-        Log.d("drag" , "set");
-
 
 
         //付箋にEditTextを出す
-        /*
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-
+                /*
                 if(clickFlag == 0){
                     editText.setHint("text");
                     FrameLayout.LayoutParams editTextParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
@@ -171,9 +120,9 @@ public class MemoActivity extends AppCompatActivity {
                     editText.setTranslationY(y - (tags[tagNum].getHeight()) / 2);
 
                 }
-
+                */
             }
-        });*/
+        });
 
 
         /*
@@ -208,6 +157,10 @@ public class MemoActivity extends AppCompatActivity {
             int y = (int) event.getRawY();
 
             switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    Log.d("touch", "down");
+                    addView(0);
+                    break;
                 case MotionEvent.ACTION_MOVE:
                     // 今回イベントでのView移動先の位置
                     int left = dragView.getLeft() + (x - oldx);
