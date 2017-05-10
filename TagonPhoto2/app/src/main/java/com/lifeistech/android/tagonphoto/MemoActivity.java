@@ -34,15 +34,14 @@ public class MemoActivity extends AppCompatActivity {
     int picnum = 0;
     FrameLayout frame;
     private ImageView [] tags = new ImageView[2];
+    private DragViewListener [] listeners = new DragViewListener[2];
 
     public static ImageView picture;
-    float x;
-    float y;
+    float firstX = 0;
+    float firstY = 0;
     int REQUEST_ORIGIN = 0;
 
-    int clickFlag = 0;
-    int tagCounter = 0;
-    //ふせんを出した回数をカウント
+    int tagClickFlag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +64,10 @@ public class MemoActivity extends AppCompatActivity {
         imageintent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(imageintent, REQUEST_ORIGIN);
 
-        ImageView dragView0 = tags[0];
-        DragViewListener listener0 = new DragViewListener(dragView0);
-        dragView0.setOnTouchListener(listener0);
-
-        ImageView dragView1 = tags[1];
-        DragViewListener listener1 = new DragViewListener(dragView1);
-        dragView1.setOnTouchListener(listener1);
+        for (int i = 0; i < tags.length; i++) {
+            listeners[i] = new DragViewListener(tags[i]);
+            tags[i].setOnTouchListener(listeners[i]);
+        }
 
     }
 
@@ -91,17 +87,71 @@ public class MemoActivity extends AppCompatActivity {
         }
     }
 
+    public class DragViewListener implements View.OnTouchListener {
+        // ドラッグ対象のView
+        private ImageView dragView;
+        // ドラッグ中に移動量を取得するための変数
+        private int oldx;
+        private int oldy;
+
+        public DragViewListener(ImageView dragView) {
+            this.dragView = dragView;
+        }
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionevent) {
+            // タッチしている位置取得
+            int x = (int) motionevent.getRawX();
+            int y = (int) motionevent.getRawY();
+
+            switch (motionevent.getAction()) {
+
+                case MotionEvent.ACTION_DOWN:
+                    firstX = view.getX();
+                    firstY = view.getY();
+                    break;
+
+
+                case MotionEvent.ACTION_MOVE:
+                    // 今回イベントでのView移動先の位置
+                    int left = dragView.getLeft() + (x - oldx);
+                    int top = dragView.getTop() + (y - oldy);
+                    // Viewを移動する
+                    dragView.layout(left, top, left + dragView.getWidth(), top + dragView.getHeight());
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    if (view.getId() == R.id.tag0) {
+                        addView(0);
+                    } else {
+                        addView(1);
+                    }
+                    break;
+            }
+
+            // 今回のタッチ位置を保持
+            oldx = x;
+            oldy = y;
+            // イベント処理完了
+            return true;
+        }
+    }
+
+
 
     public void addView(final int tagNum){
         final EditText editText = new EditText(this);
         final ImageView image = new ImageView(getApplicationContext());
-
         image.setImageResource(getResources().getIdentifier("fusen" + tagNum, "drawable", getPackageName()));
         frame.addView(image, tags[tagNum].getWidth(), tags[tagNum].getHeight());
+        //image.setTranslationX(firstX);
+        //image.setTranslationY(firstY);
 
+        /*
         ImageView dragView = image;
         DragViewListener listener = new DragViewListener(dragView);
         dragView.setOnTouchListener(listener);
+        */
 
 
         //付箋にEditTextを出す
@@ -139,45 +189,6 @@ public class MemoActivity extends AppCompatActivity {
     }
 
 
-    public class DragViewListener implements View.OnTouchListener {
-        // ドラッグ対象のView
-        private ImageView dragView;
-        // ドラッグ中に移動量を取得するための変数
-        private int oldx;
-        private int oldy;
-
-        public DragViewListener(ImageView dragView) {
-            this.dragView = dragView;
-        }
-
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-            // タッチしている位置取得
-            int x = (int) event.getRawX();
-            int y = (int) event.getRawY();
-
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    Log.d("touch", "down");
-                    addView(0);
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    // 今回イベントでのView移動先の位置
-                    int left = dragView.getLeft() + (x - oldx);
-                    int top = dragView.getTop() + (y - oldy);
-                    // Viewを移動する
-                    dragView.layout(left, top, left + dragView.getWidth(), top
-                            + dragView.getHeight());
-                    break;
-            }
-
-            // 今回のタッチ位置を保持
-            oldx = x;
-            oldy = y;
-            // イベント処理完了
-            return true;
-        }
-    }
 
 
 

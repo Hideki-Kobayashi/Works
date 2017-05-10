@@ -74,19 +74,8 @@ public class MemoActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
 
                 switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.d("touch", "down");
-                        tagName = "small";
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        Log.d("touch", "move");
-                        break;
                     case MotionEvent.ACTION_UP:
-                        Log.d("touch", "up");
-                        x = view.getX();
-                        y = view.getY();
                         addView(0);
-
                         break;
                 }
                 //return false だと動かない
@@ -94,24 +83,12 @@ public class MemoActivity extends AppCompatActivity {
             }
         });
 
-
-
         tags[1].setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
 
                 switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.d("touch", "down");
-                        tagName = "medium";
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        Log.d("touch", "move");
-                        break;
                     case MotionEvent.ACTION_UP:
-                        Log.d("touch", "up");
-                        x = view.getX();
-                        y = view.getY();
                         addView(1);
                         break;
                 }
@@ -121,7 +98,6 @@ public class MemoActivity extends AppCompatActivity {
         });
 
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -137,7 +113,6 @@ public class MemoActivity extends AppCompatActivity {
             }
         }
     }
-
 
     public void addView(final int tagNum){
         final EditText editText = new EditText(this);
