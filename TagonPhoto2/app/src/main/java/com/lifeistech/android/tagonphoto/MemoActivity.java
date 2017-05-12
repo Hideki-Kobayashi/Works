@@ -41,7 +41,7 @@ public class MemoActivity extends AppCompatActivity {
     float firstY = 0;
     int REQUEST_ORIGIN = 0;
 
-    int tagClickFlag = 0;
+    //int tagClickFlag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +109,12 @@ public class MemoActivity extends AppCompatActivity {
                 case MotionEvent.ACTION_DOWN:
                     firstX = view.getX();
                     firstY = view.getY();
+
+                    if (view.getId() == R.id.tag0) {
+                        addView(0);
+                    } else {
+                        addView(1);
+                    }
                     break;
 
 
@@ -118,14 +124,6 @@ public class MemoActivity extends AppCompatActivity {
                     int top = dragView.getTop() + (y - oldy);
                     // Viewを移動する
                     dragView.layout(left, top, left + dragView.getWidth(), top + dragView.getHeight());
-                    break;
-
-                case MotionEvent.ACTION_UP:
-                    if (view.getId() == R.id.tag0) {
-                        addView(0);
-                    } else {
-                        addView(1);
-                    }
                     break;
             }
 
@@ -140,14 +138,16 @@ public class MemoActivity extends AppCompatActivity {
 
 
     public void addView(final int tagNum){
-        final EditText editText = new EditText(this);
-        final ImageView image = new ImageView(getApplicationContext());
+        //final EditText editText = new EditText(this);
+        final ImageView image = new ImageView(this);
         image.setImageResource(getResources().getIdentifier("fusen" + tagNum, "drawable", getPackageName()));
-        frame.addView(image, tags[tagNum].getWidth(), tags[tagNum].getHeight());
-        //image.setTranslationX(firstX);
-        //image.setTranslationY(firstY);
 
+        frame.addView(image, tags[tagNum].getWidth(), tags[tagNum].getHeight());
         /*
+        image.setTranslationX(firstX);
+        image.setTranslationY(firstY);
+
+
         ImageView dragView = image;
         DragViewListener listener = new DragViewListener(dragView);
         dragView.setOnTouchListener(listener);
@@ -155,11 +155,12 @@ public class MemoActivity extends AppCompatActivity {
 
 
         //付箋にEditTextを出す
+        /*
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                /*
+
                 if(clickFlag == 0){
                     editText.setHint("text");
                     FrameLayout.LayoutParams editTextParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
@@ -170,9 +171,10 @@ public class MemoActivity extends AppCompatActivity {
                     editText.setTranslationY(y - (tags[tagNum].getHeight()) / 2);
 
                 }
-                */
+
             }
-        });
+
+        });*/
 
 
         /*
@@ -230,6 +232,7 @@ public class MemoActivity extends AppCompatActivity {
 
 
     // 保存するメソッド
+    /*
     public void save() throws Exception {
         try {
             frame.setDrawingCacheEnabled(true);
@@ -305,7 +308,7 @@ public class MemoActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
 
 
