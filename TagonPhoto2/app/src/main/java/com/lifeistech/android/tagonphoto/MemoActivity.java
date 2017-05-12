@@ -41,9 +41,12 @@ public class MemoActivity extends AppCompatActivity {
     int left;
     int top;
 
-    int REQUEST_ORIGIN = 0;
+    float firstX;
+    float firstY;
 
-    //int tagClickFlag = 0;
+    boolean tagClickFlag;
+
+    int REQUEST_ORIGIN = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,20 +110,29 @@ public class MemoActivity extends AppCompatActivity {
             int y = (int) motionevent.getRawY();
 
             switch (motionevent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    firstX = view.getX();
+                    firstY = view.getY();
+
+                    break;
 
                 case MotionEvent.ACTION_MOVE:
                     // 今回イベントでのView移動先の位置
                      left = dragView.getLeft() + (x - oldx);
                      top = dragView.getTop() + (y - oldy);
                     // Viewを移動する
-                    dragView.layout(left, top, left + dragView.getWidth(), top + dragView.getHeight());
+                    //dragView.layout(left, top, left + dragView.getWidth(), top + dragView.getHeight());
+
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dragView.getWidth(), dragView.getHeight());
+                    layoutParams.setMargins(left, top, 0, 0);
+                    dragView.setLayoutParams(layoutParams);
                     break;
 
                 case MotionEvent.ACTION_UP:
                     if (view.getId() == R.id.tag0) {
-                        addView(0);
+                            addView(0);
                     } else if (view.getId() == R.id.tag1) {
-                        addView(1);
+                            addView(1);
                     }
                     break;
             }
@@ -136,47 +148,43 @@ public class MemoActivity extends AppCompatActivity {
 
 
     public void addView(final int tagNum){
-        //final EditText editText = new EditText(this);
-        //tags[tagNum].setImageResource(getResources().getIdentifier("fusen" + tagNum, "drawable", getPackageName()));
-        frame.removeView(tags[tagNum]);
-        //frame.addView(tags[tagNum]);
-        tags[tagNum].setTranslationX(left);
-        tags[tagNum].setTranslationY(top);
+        final EditText editText = new EditText(this);
+        ImageView image = new ImageView(this);
+        image.setImageResource(getResources().getIdentifier("fusen" + tagNum, "drawable", getPackageName()));
 
-        DragViewListener listener = new DragViewListener(tags[tagNum]);
-        tags[tagNum].setOnTouchListener(listener);
+
+        frame.addView(image, tags[tagNum].getWidth(), tags[tagNum].getHeight());
+        image.setTranslationX(firstX);
+        image.setTranslationY(firstY);
+
+        DragViewListener listener = new DragViewListener(image);
+        image.setOnTouchListener(listener);
 
 
 
 
         //付箋にEditTextを出す
-        /*
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-
-                if(clickFlag == 0){
                     editText.setHint("text");
                     FrameLayout.LayoutParams editTextParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
                     editText.setLayoutParams(editTextParams);
 
                     frame.addView(editText);
-                    editText.setTranslationX(x - (tags[tagNum].getWidth()) / 3);
-                    editText.setTranslationY(y - (tags[tagNum].getHeight()) / 2);
+                    editText.setTranslationX(left + 10);
+                    editText.setTranslationY(top);
 
-                }
 
             }
 
-        });*/
-
-
+        });
         /*
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                frame.removeView(image);
+                frame.removeView(view);
                 return false;
             }
         });
