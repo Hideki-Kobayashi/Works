@@ -37,8 +37,10 @@ public class MemoActivity extends AppCompatActivity {
     private DragViewListener [] listeners = new DragViewListener[2];
 
     public static ImageView picture;
-    float firstX = 0;
-    float firstY = 0;
+
+    int left;
+    int top;
+
     int REQUEST_ORIGIN = 0;
 
     //int tagClickFlag = 0;
@@ -106,26 +108,18 @@ public class MemoActivity extends AppCompatActivity {
 
             switch (motionevent.getAction()) {
 
-                case MotionEvent.ACTION_DOWN:
-                    firstX = view.getX();
-                    firstY = view.getY();
-
-                    break;
-
-
                 case MotionEvent.ACTION_MOVE:
                     // 今回イベントでのView移動先の位置
-                    int left = dragView.getLeft() + (x - oldx);
-                    int top = dragView.getTop() + (y - oldy);
+                     left = dragView.getLeft() + (x - oldx);
+                     top = dragView.getTop() + (y - oldy);
                     // Viewを移動する
                     dragView.layout(left, top, left + dragView.getWidth(), top + dragView.getHeight());
                     break;
 
                 case MotionEvent.ACTION_UP:
-
                     if (view.getId() == R.id.tag0) {
                         addView(0);
-                    } else {
+                    } else if (view.getId() == R.id.tag1) {
                         addView(1);
                     }
                     break;
@@ -143,19 +137,16 @@ public class MemoActivity extends AppCompatActivity {
 
     public void addView(final int tagNum){
         //final EditText editText = new EditText(this);
-        final ImageView image = new ImageView(this);
-        image.setImageResource(getResources().getIdentifier("fusen" + tagNum, "drawable", getPackageName()));
+        //tags[tagNum].setImageResource(getResources().getIdentifier("fusen" + tagNum, "drawable", getPackageName()));
+        frame.removeView(tags[tagNum]);
+        //frame.addView(tags[tagNum]);
+        tags[tagNum].setTranslationX(left);
+        tags[tagNum].setTranslationY(top);
 
-        frame.addView(image, tags[tagNum].getWidth(), tags[tagNum].getHeight());
-        /*
-        image.setTranslationX(firstX);
-        image.setTranslationY(firstY);
+        DragViewListener listener = new DragViewListener(tags[tagNum]);
+        tags[tagNum].setOnTouchListener(listener);
 
 
-        ImageView dragView = image;
-        DragViewListener listener = new DragViewListener(dragView);
-        dragView.setOnTouchListener(listener);
-        */
 
 
         //付箋にEditTextを出す
