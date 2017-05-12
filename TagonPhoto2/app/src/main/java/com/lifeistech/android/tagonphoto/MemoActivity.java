@@ -110,11 +110,6 @@ public class MemoActivity extends AppCompatActivity {
                     firstX = view.getX();
                     firstY = view.getY();
 
-                    if (view.getId() == R.id.tag0) {
-                        addView(0);
-                    } else {
-                        addView(1);
-                    }
                     break;
 
 
@@ -124,6 +119,15 @@ public class MemoActivity extends AppCompatActivity {
                     int top = dragView.getTop() + (y - oldy);
                     // Viewを移動する
                     dragView.layout(left, top, left + dragView.getWidth(), top + dragView.getHeight());
+                    break;
+
+                case MotionEvent.ACTION_UP:
+
+                    if (view.getId() == R.id.tag0) {
+                        addView(0);
+                    } else {
+                        addView(1);
+                    }
                     break;
             }
 
