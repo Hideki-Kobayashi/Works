@@ -41,10 +41,8 @@ public class MemoActivity extends AppCompatActivity {
     int left;
     int top;
 
-    float firstX;
-    float firstY;
-
-    boolean tagClickFlag;
+    float lastX;
+    float lastY;
 
     int REQUEST_ORIGIN = 0;
 
@@ -56,13 +54,11 @@ public class MemoActivity extends AppCompatActivity {
 
         picture = (ImageView) findViewById(R.id.picture);
         frame = (FrameLayout) findViewById(R.id.framelayout);
-        //Intent intent = getIntent();
 
         for (int i = 0; i < 2; i++){
             tags[i] = (ImageView) findViewById(getResources().getIdentifier("tag" + i, "id", getPackageName()));
             //getIdentifier("fusen" + i, "id", getPackageName())でNullPointerException
         }
-
 
         Intent imageintent = new Intent();
         imageintent.setType("image/*");
@@ -73,9 +69,7 @@ public class MemoActivity extends AppCompatActivity {
             listeners[i] = new DragViewListener(tags[i]);
             tags[i].setOnTouchListener(listeners[i]);
         }
-
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -110,30 +104,59 @@ public class MemoActivity extends AppCompatActivity {
             int y = (int) motionevent.getRawY();
 
             switch (motionevent.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    firstX = view.getX();
-                    firstY = view.getY();
-
-                    break;
-
                 case MotionEvent.ACTION_MOVE:
                     // 今回イベントでのView移動先の位置
                      left = dragView.getLeft() + (x - oldx);
                      top = dragView.getTop() + (y - oldy);
                     // Viewを移動する
-                    //dragView.layout(left, top, left + dragView.getWidth(), top + dragView.getHeight());
-
-                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dragView.getWidth(), dragView.getHeight());
-                    layoutParams.setMargins(left, top, 0, 0);
-                    dragView.setLayoutParams(layoutParams);
+                    dragView.layout(left, top, left + dragView.getWidth(), top + dragView.getHeight());
                     break;
 
                 case MotionEvent.ACTION_UP:
+                    lastX = view.getX();
+                    lastY = view.getY();
                     if (view.getId() == R.id.tag0) {
                             addView(0);
                     } else if (view.getId() == R.id.tag1) {
                             addView(1);
                     }
+                    break;
+            }
+            // 今回のタッチ位置を保持
+            oldx = x;
+            oldy = y;
+            // イベント処理完了
+            return true;
+        }
+    }
+
+    public class DragViewListener2 implements View.OnTouchListener {
+        // ドラッグ対象のView
+        private ImageView dragView;
+        // ドラッグ中に移動量を取得するための変数
+        private int oldx;
+        private int oldy;
+
+        public DragViewListener2(ImageView dragView) {
+            this.dragView = dragView;
+        }
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionevent) {
+            // タッチしている位置取得
+            int x = (int) motionevent.getRawX();
+            int y = (int) motionevent.getRawY();
+
+            switch (motionevent.getAction()) {
+                case MotionEvent.ACTION_MOVE:
+                    // 今回イベントでのView移動先の位置
+                    left = dragView.getLeft() + (x - oldx);
+                    top = dragView.getTop() + (y - oldy);
+                    // Viewを移動する
+
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dragView.getWidth(), dragView.getHeight());
+                    layoutParams.setMargins(left, top, 0, 0);
+                    dragView.setLayoutParams(layoutParams);
                     break;
             }
 
@@ -145,50 +168,43 @@ public class MemoActivity extends AppCompatActivity {
         }
     }
 
-
-
     public void addView(final int tagNum){
         final EditText editText = new EditText(this);
         ImageView image = new ImageView(this);
         image.setImageResource(getResources().getIdentifier("fusen" + tagNum, "drawable", getPackageName()));
-
-
         frame.addView(image, tags[tagNum].getWidth(), tags[tagNum].getHeight());
-        image.setTranslationX(firstX);
-        image.setTranslationY(firstY);
+        image.setTranslationX(lastX);
+        image.setTranslationY(lastY);
 
-        DragViewListener listener = new DragViewListener(image);
-        image.setOnTouchListener(listener);
-
-
-
+        DragViewListener2 listener2 = new DragViewListener2(image);
+        image.setOnTouchListener(listener2);
 
         //付箋にEditTextを出す
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                     editText.setHint("text");
                     FrameLayout.LayoutParams editTextParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
                     editText.setLayoutParams(editTextParams);
-
                     frame.addView(editText);
-                    editText.setTranslationX(left + 10);
-                    editText.setTranslationY(top);
-
-
+                    //editText.setTranslationX(left + 10);
+                    //editText.setTranslationY(top);
+                Log.d("click", "on");
             }
 
         });
-        /*
+        Log.d("onClickListener", "set");
+
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                frame.removeView(view);
+                ((ViewGroup)view.getParent()).removeView(view);
+                Log.d("longclick","on");
                 return false;
             }
         });
-        */
+        Log.d("onLongClickListener", "set");
+
 
 
     }
