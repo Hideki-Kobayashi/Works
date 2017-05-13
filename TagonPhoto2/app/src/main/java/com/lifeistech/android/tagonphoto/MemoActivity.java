@@ -115,8 +115,7 @@ public class MemoActivity extends AppCompatActivity {
                     // Viewを移動する
                     dragView.layout(left, top, left + dragView.getWidth(), top + dragView.getHeight());
 
-                    Log.d("POSITION A MOVE", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")");
-                    Log.d("POSITION A MOVE", " left2: " + String.valueOf(dragView.getLeft() + (x - oldx)) + " top2: " + String.valueOf(dragView.getTop() + (y - oldy)));
+                    Log.d("POSITION A MOVE", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")" + " viewleft: " + String.valueOf(dragView.getLeft() + (x - oldx)) + " viewtop: " + String.valueOf(dragView.getTop() + (y - oldy)));
                     break;
 
                 case MotionEvent.ACTION_UP:
@@ -179,9 +178,7 @@ public class MemoActivity extends AppCompatActivity {
                     dragView.setLayoutParams(layoutParams);
                     editText.setLayoutParams(editTextParams);
 
-                    Log.d("POSITION B MOVE", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")");
-                    Log.d("POSITION B MOVE", " left2: " + String.valueOf(dragView.getLeft() + (x - oldx)) + " top2: " + String.valueOf(dragView.getTop() + (y - oldy)));
-                    Log.d("POSITION B MOVE", " textLeft: " + editText.getLeft() + " textTop: " + editText.getTop());
+                    Log.d("POSITION B MOVE", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")" + " viewleft: " + String.valueOf(dragView.getLeft() + (x - oldx)) + " viewtop: " + String.valueOf(dragView.getTop() + (y - oldy)) + " textLeft: " + editText.getLeft() + " textTop: " + editText.getTop());
                     break;
 
             }
