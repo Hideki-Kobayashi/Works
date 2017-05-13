@@ -115,7 +115,7 @@ public class MemoActivity extends AppCompatActivity {
                     // Viewを移動する
                     dragView.layout(left, top, left + dragView.getWidth(), top + dragView.getHeight());
 
-                    Log.d("POSITION A MOVE", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")" + " viewleft: " + String.valueOf(dragView.getLeft() + (x - oldx)) + " viewtop: " + String.valueOf(dragView.getTop() + (y - oldy)));
+                    Log.d("POSITION A MOVE", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " (x,y): " + "(" + String.valueOf(x) + "," + String.valueOf(y) + ")" + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")" + " viewleft: " + String.valueOf(dragView.getLeft() + (x - oldx)) + " viewtop: " + String.valueOf(dragView.getTop() + (y - oldy)));
                     break;
 
                 case MotionEvent.ACTION_UP:
@@ -136,8 +136,7 @@ public class MemoActivity extends AppCompatActivity {
                     editText.setGravity(Gravity.TOP);
                     editText.setGravity(Gravity.LEFT);
 
-                    Log.d("POSITION A UP", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")");
-                    Log.d("POSITION A UP", " textLeft: " + editText.getLeft() + " textTop: " + editText.getTop());
+                    Log.d("POSITION A UP", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " (x,y): " + "(" + String.valueOf(x) + "," + String.valueOf(y) + ")" + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")" + " textLeft: " + editText.getLeft() + " textTop: " + editText.getTop());
                     break;
             }
             // 今回のタッチ位置を保持
@@ -168,17 +167,19 @@ public class MemoActivity extends AppCompatActivity {
             switch (motionevent.getAction()) {
                 case MotionEvent.ACTION_MOVE:
                     // 今回イベントでのView移動先の位置
-                    left = dragView.getLeft() + (x - oldx);
-                    top = dragView.getTop() + (y - oldy);
+                    left = view.getLeft() + (x - oldx);
+                    top = view.getTop() + (y - oldy);
+                    int editLeft = editText.getLeft() + (x - oldx);
+                    int editTop = editText.getTop() + (y - oldy);
                     // Viewを移動する
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dragView.getWidth(), dragView.getHeight());
                     FrameLayout.LayoutParams editTextParams = new FrameLayout.LayoutParams(dragView.getWidth()-150, dragView.getHeight());
                     layoutParams.setMargins(left, top, 0, 0);
-                    editTextParams.setMargins(left + 150, top, 0, 0);
+                    editTextParams.setMargins(editLeft, editTop, 0, 0);
                     dragView.setLayoutParams(layoutParams);
                     editText.setLayoutParams(editTextParams);
 
-                    Log.d("POSITION B MOVE", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")" + " viewleft: " + String.valueOf(dragView.getLeft() + (x - oldx)) + " viewtop: " + String.valueOf(dragView.getTop() + (y - oldy)) + " textLeft: " + editText.getLeft() + " textTop: " + editText.getTop());
+                    Log.d("POSITION B MOVE", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " (x,y): " + "(" + String.valueOf(x) + "," + String.valueOf(y) + ")" + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")" + " viewleft: " + String.valueOf(dragView.getLeft() + (x - oldx)) + " viewtop: " + String.valueOf(dragView.getTop() + (y - oldy)) + " textLeft: " + editText.getLeft() + " textTop: " + editText.getTop());
                     break;
 
             }
