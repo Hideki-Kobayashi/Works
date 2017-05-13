@@ -131,15 +131,9 @@ public class MemoActivity extends AppCompatActivity {
     }
 
     public class DragViewListener2 implements View.OnTouchListener {
-        // ドラッグ対象のView
-        private ImageView dragView;
         // ドラッグ中に移動量を取得するための変数
         private int oldx;
         private int oldy;
-
-        public DragViewListener2(ImageView dragView) {
-            this.dragView = dragView;
-        }
 
         @Override
         public boolean onTouch(View view, MotionEvent motionevent) {
@@ -148,15 +142,17 @@ public class MemoActivity extends AppCompatActivity {
             int y = (int) motionevent.getRawY();
 
             switch (motionevent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+
                 case MotionEvent.ACTION_MOVE:
                     // 今回イベントでのView移動先の位置
-                    left = dragView.getLeft() + (x - oldx);
-                    top = dragView.getTop() + (y - oldy);
+                    left = view.getLeft() + (x - oldx);
+                    top = view.getTop() + (y - oldy);
                     // Viewを移動する
 
-                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dragView.getWidth(), dragView.getHeight());
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(view.getWidth(), view.getHeight());
                     layoutParams.setMargins(left, top, 0, 0);
-                    dragView.setLayoutParams(layoutParams);
+                    view.setLayoutParams(layoutParams);
                     break;
             }
 
@@ -176,8 +172,7 @@ public class MemoActivity extends AppCompatActivity {
         image.setTranslationX(lastX);
         image.setTranslationY(lastY);
 
-        DragViewListener2 listener2 = new DragViewListener2(image);
-        image.setOnTouchListener(listener2);
+        image.setOnTouchListener(new DragViewListener2());
 
         //付箋にEditTextを出す
         image.setOnClickListener(new View.OnClickListener() {
@@ -187,8 +182,8 @@ public class MemoActivity extends AppCompatActivity {
                     FrameLayout.LayoutParams editTextParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
                     editText.setLayoutParams(editTextParams);
                     frame.addView(editText);
-                    //editText.setTranslationX(left + 10);
-                    //editText.setTranslationY(top);
+                    editText.setTranslationX(left + 10);
+                    editText.setTranslationY(top);
                 Log.d("click", "on");
             }
 
