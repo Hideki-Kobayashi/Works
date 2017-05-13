@@ -39,6 +39,7 @@ public class MemoActivity extends AppCompatActivity {
 
     public static ImageView picture;
     EditText editText;
+    ImageView image;
 
     int left;
     int top;
@@ -113,6 +114,9 @@ public class MemoActivity extends AppCompatActivity {
                      top = dragView.getTop() + (y - oldy);
                     // Viewを移動する
                     dragView.layout(left, top, left + dragView.getWidth(), top + dragView.getHeight());
+
+                    Log.d("POSITION A MOVE", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")");
+                    Log.d("POSITION A MOVE", " left2: " + String.valueOf(dragView.getLeft() + (x - oldx)) + " top2: " + String.valueOf(dragView.getTop() + (y - oldy)));
                     break;
 
                 case MotionEvent.ACTION_UP:
@@ -127,13 +131,14 @@ public class MemoActivity extends AppCompatActivity {
                     editText = new EditText(getApplicationContext());
                     editText.setHint("text");
                     FrameLayout.LayoutParams editTextParams = new FrameLayout.LayoutParams(dragView.getWidth()-150, dragView.getHeight());
+                    editTextParams.setMargins(left + 150, top, 0, 0);
                     editText.setLayoutParams(editTextParams);
                     frame.addView(editText);
                     editText.setGravity(Gravity.TOP);
                     editText.setGravity(Gravity.LEFT);
-                    editText.setTranslationX(left + 150);
-                    editText.setTranslationY(top);
-                    Log.d("edittext", "set");
+
+                    Log.d("POSITION A UP", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")");
+                    Log.d("POSITION A UP", " textLeft: " + editText.getLeft() + " textTop: " + editText.getTop());
                     break;
             }
             // 今回のタッチ位置を保持
@@ -168,12 +173,15 @@ public class MemoActivity extends AppCompatActivity {
                     top = dragView.getTop() + (y - oldy);
                     // Viewを移動する
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dragView.getWidth(), dragView.getHeight());
-                    FrameLayout.LayoutParams editTextlayoutParams = new FrameLayout.LayoutParams(dragView.getWidth()-150, dragView.getHeight());
+                    FrameLayout.LayoutParams editTextParams = new FrameLayout.LayoutParams(dragView.getWidth()-150, dragView.getHeight());
                     layoutParams.setMargins(left, top, 0, 0);
-                    editTextlayoutParams.setMargins(left, top, 0, 0);
+                    editTextParams.setMargins(left + 150, top, 0, 0);
                     dragView.setLayoutParams(layoutParams);
-                    editText.setLayoutParams(editTextlayoutParams);
-                    Log.d("MotionEvent", "Move");
+                    editText.setLayoutParams(editTextParams);
+
+                    Log.d("POSITION B MOVE", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")");
+                    Log.d("POSITION B MOVE", " left2: " + String.valueOf(dragView.getLeft() + (x - oldx)) + " top2: " + String.valueOf(dragView.getTop() + (y - oldy)));
+                    Log.d("POSITION B MOVE", " textLeft: " + editText.getLeft() + " textTop: " + editText.getTop());
                     break;
 
             }
@@ -187,8 +195,7 @@ public class MemoActivity extends AppCompatActivity {
     }
 
     public void addView(final int tagNum){
-        final EditText editText = new EditText(this);
-        ImageView image = new ImageView(this);
+        image = new ImageView(this);
         image.setImageResource(getResources().getIdentifier("fusen" + tagNum, "drawable", getPackageName()));
         frame.addView(image, tags[tagNum].getWidth(), tags[tagNum].getHeight());
         image.setTranslationX(lastX);
