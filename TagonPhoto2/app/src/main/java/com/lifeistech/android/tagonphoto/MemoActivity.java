@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -122,17 +123,17 @@ public class MemoActivity extends AppCompatActivity {
                     } else if (view.getId() == R.id.tag1) {
                             addView(1);
                     }
-                    if(flag == false){
-                        editText = new EditText(getApplicationContext());
-                        editText.setHint("text");
-                        FrameLayout.LayoutParams editTextParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-                        editText.setLayoutParams(editTextParams);
-                        frame.addView(editText);
-                        editText.setTranslationX(left + 10);
-                        editText.setTranslationY(top);
-                        Log.d("edittext", "set");
-                        flag = true;
-                    }
+
+                    editText = new EditText(getApplicationContext());
+                    editText.setHint("text");
+                    FrameLayout.LayoutParams editTextParams = new FrameLayout.LayoutParams(dragView.getWidth()-150, dragView.getHeight());
+                    editText.setLayoutParams(editTextParams);
+                    frame.addView(editText);
+                    editText.setGravity(Gravity.TOP);
+                    editText.setGravity(Gravity.LEFT);
+                    editText.setTranslationX(left + 150);
+                    editText.setTranslationY(top);
+                    Log.d("edittext", "set");
                     break;
             }
             // 今回のタッチ位置を保持
@@ -167,9 +168,11 @@ public class MemoActivity extends AppCompatActivity {
                     top = dragView.getTop() + (y - oldy);
                     // Viewを移動する
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dragView.getWidth(), dragView.getHeight());
+                    FrameLayout.LayoutParams editTextlayoutParams = new FrameLayout.LayoutParams(dragView.getWidth()-150, dragView.getHeight());
                     layoutParams.setMargins(left, top, 0, 0);
+                    editTextlayoutParams.setMargins(left, top, 0, 0);
                     dragView.setLayoutParams(layoutParams);
-                    //editText.setLayoutParams(layoutParams);
+                    editText.setLayoutParams(editTextlayoutParams);
                     Log.d("MotionEvent", "Move");
                     break;
 
@@ -194,23 +197,6 @@ public class MemoActivity extends AppCompatActivity {
         DragViewListener2 listener2 = new DragViewListener2(image);
         image.setOnTouchListener(listener2);
 
-        //付箋にEditTextを出す
-        /*
-        image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                    editText.setHint("text");
-                    FrameLayout.LayoutParams editTextParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-                    editText.setLayoutParams(editTextParams);
-                    frame.addView(editText);
-                    editText.setTranslationX(left + 10);
-                    editText.setTranslationY(top);
-                Log.d("click", "on");
-            }
-
-        });*/
-
-        /*
         image.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -220,7 +206,6 @@ public class MemoActivity extends AppCompatActivity {
             }
         });
         Log.d("onLongClickListener", "set");
-        */
 
 
 
