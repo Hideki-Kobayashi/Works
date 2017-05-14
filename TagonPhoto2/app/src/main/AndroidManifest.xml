@@ -17,6 +17,7 @@
         </activity>
         <activity android:name=".MemoActivity" />
         <activity android:name=".MemoButton"></activity>
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
     </application>
 
 </manifest>

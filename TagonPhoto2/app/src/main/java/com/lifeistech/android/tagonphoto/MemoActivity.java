@@ -49,6 +49,10 @@ public class MemoActivity extends AppCompatActivity {
     float lastLeft;
     float lastTop;
 
+    int tagNumber = 0;
+    int editTextNum= 0;
+
+
     int REQUEST_ORIGIN = 0;
 
     @Override
@@ -169,7 +173,7 @@ public class MemoActivity extends AppCompatActivity {
             int y = (int) motionevent.getRawY();
 
             switch (motionevent.getAction()) {
-                
+
                 case MotionEvent.ACTION_MOVE:
                     // 今回イベントでのView移動先の位置
                     left = view.getLeft() + (x - oldx);
@@ -221,54 +225,14 @@ public class MemoActivity extends AppCompatActivity {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // 保存するメソッド
-    /*
     public void save() throws Exception {
         try {
             frame.setDrawingCacheEnabled(true);
             Bitmap save_bmp = Bitmap.createBitmap(frame.getDrawingCache());
-            String folderpath = Environment.getExternalStorageDirectory() + "/TagonPhoto/";
+            //String folderpath = getExternalFilesDir(null) + "/Tagonphoto/";
+            String folderpath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/tagonphoto/" ;
+            Log.d("folder: " , folderpath);
             File folder = new File(folderpath);
             if (!folder.exists()) {
                 folder.mkdirs();
@@ -289,10 +253,10 @@ public class MemoActivity extends AppCompatActivity {
             frame.setDrawingCacheEnabled(false);
             showFolder(file);
         } catch (FileNotFoundException e) {
-            Toast.makeText(this, "例外1です", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "例外１", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         } catch (IOException e) {
-            Toast.makeText(this, "例外2です", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "例外２", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -339,7 +303,7 @@ public class MemoActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
 
 
