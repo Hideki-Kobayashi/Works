@@ -40,12 +40,7 @@ public class MemoActivity extends AppCompatActivity {
     float x;
     float y;
     int REQUEST_ORIGIN = 0;
-    String [] tagNames = {"small", "medium"};
-    //private EditText editText;
 
-    int clickFlag = 0;
-    int tagCounter = 0;
-    //ふせんを出した回数をカウント
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +50,7 @@ public class MemoActivity extends AppCompatActivity {
 
         picture = (ImageView) findViewById(R.id.picture);
         frame = (FrameLayout) findViewById(R.id.framelayout);
-        //Intent intent = getIntent();
+
 
         for (int i = 0; i < 2; i++){
             tags[i] = (ImageView) findViewById(getResources().getIdentifier("tag" + i, "id", getPackageName()));

@@ -46,6 +46,8 @@ public class MemoActivity extends AppCompatActivity {
 
     float lastX;
     float lastY;
+    float lastLeft;
+    float lastTop;
 
     int REQUEST_ORIGIN = 0;
 
@@ -95,7 +97,6 @@ public class MemoActivity extends AppCompatActivity {
         // ドラッグ中に移動量を取得するための変数
         private int oldx;
         private int oldy;
-        boolean flag = false;
 
         public DragViewListener(ImageView dragView) {
             this.dragView = dragView;
@@ -119,8 +120,11 @@ public class MemoActivity extends AppCompatActivity {
                     break;
 
                 case MotionEvent.ACTION_UP:
+                    //lastLeft = view.getLeft();
+                    //lastTop = view.getTop();
                     lastX = view.getX();
                     lastY = view.getY();
+                    Log.d("TAG_LAST_POSITION", " last(left, top): " + "(" + lastLeft + "," + lastTop + ")" + " last(x,y): " + "(" + lastX + "," + lastY + ")" );
                     if (view.getId() == R.id.tag0) {
                             addView(0);
                     } else if (view.getId() == R.id.tag1) {
@@ -165,12 +169,13 @@ public class MemoActivity extends AppCompatActivity {
             int y = (int) motionevent.getRawY();
 
             switch (motionevent.getAction()) {
+                
                 case MotionEvent.ACTION_MOVE:
                     // 今回イベントでのView移動先の位置
                     left = view.getLeft() + (x - oldx);
                     top = view.getTop() + (y - oldy);
-                    int editLeft = editText.getLeft() + (x - oldx);
-                    int editTop = editText.getTop() + (y - oldy);
+                    int editLeft = (int) editText.getX() + (x - oldx);
+                    int editTop = (int) editText.getY() + (y - oldy);
                     // Viewを移動する
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dragView.getWidth(), dragView.getHeight());
                     FrameLayout.LayoutParams editTextParams = new FrameLayout.LayoutParams(dragView.getWidth()-150, dragView.getHeight());
