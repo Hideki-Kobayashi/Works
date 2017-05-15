@@ -303,11 +303,11 @@ public class MemoActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_save){
-            tags[0].setVisibility(View.INVISIBLE);
 
+
+        if (id == R.id.action_save){
             try{
-                /*
+
                 tags[0].setOnVisibilityChangeListener(new MyImageView.OnVisibilityChangeListener() {
                     @Override
                     public void onVisibilityChange(int visiblity) {
@@ -324,13 +324,32 @@ public class MemoActivity extends AppCompatActivity {
 
                         }
                     }
-                });*/
+                });
 
+                tags[1].setOnVisibilityChangeListener(new MyImageView.OnVisibilityChangeListener() {
+                    @Override
+                    public void onVisibilityChange(int visiblity) {
+                        if (View.VISIBLE == visiblity) {
 
+                        } else if (View.INVISIBLE == visiblity) {
+                            try {
+                                save();
+                            } catch (Exception e) {
+                                e.printStackTrace();
 
+                            }
+                        } else if (View.GONE == visiblity) {
+
+                        }
+                    }
+                });
             }catch (Exception e){
                 e.printStackTrace();
             }
+            tags[0].setVisibility(View.INVISIBLE);
+            tags[1].setVisibility(View.INVISIBLE);
+            tags[0].setVisibility(View.VISIBLE);
+            tags[1].setVisibility(View.VISIBLE);
 
         }
 
