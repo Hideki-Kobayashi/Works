@@ -1,13 +1,18 @@
 package com.lifeistech.android.tagonphoto;
 
+import android.Manifest;
 import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -30,15 +36,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class MemoActivity extends AppCompatActivity {
+public class MemoActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     int picnum = 0;
     FrameLayout frame;
+    TextView removeArea;
     private MyImageView [] tags = new MyImageView[2];
     private DragViewListener [] listeners = new DragViewListener[2];
 
     public static ImageView picture;
-    //EditText editText;
     ImageView image;
 
     int left;
@@ -49,20 +55,29 @@ public class MemoActivity extends AppCompatActivity {
     float lastLeft;
     float lastTop;
 
-    int tagNumber = 0;
-    int editTextNum= 0;
-
-
     int REQUEST_ORIGIN = 0;
+    final int REQUEST_PERMISSION_CODE = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo);
 
+        String[] permissions = new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+            // まだ権限がないので権限をユーザに権限を求める
+            ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSION_CODE);
+            Log.d("PERMISSION", "denied");
+        } else {
+            Log.d("PERMISSION", "granted");
+            // すでに権限があるのでOK (Android 6.0未満 or すでに持っている)
+        }
 
         picture = (ImageView) findViewById(R.id.picture);
         frame = (FrameLayout) findViewById(R.id.framelayout);
+        removeArea = (TextView) findViewById(R.id.removeArea);
 
         for (int i = 0; i < 2; i++){
             tags[i] = (MyImageView) findViewById(getResources().getIdentifier("tag" + i, "id", getPackageName()));
@@ -139,13 +154,14 @@ public class MemoActivity extends AppCompatActivity {
                     editText.setGravity(Gravity.TOP);
                     editText.setGravity(Gravity.LEFT);
 
-                    if (view.getId() == R.id.tag0) {
-                        addView(0,editText);
-                    } else if (view.getId() == R.id.tag1) {
-                        addView(1,editText);
-                    }
+                        if (view.getId() == R.id.tag0) {
+                            addView(0, editText);
+                        } else if (view.getId() == R.id.tag1) {
+                            addView(1, editText);
+                        }
 
-                    frame.addView(editText);
+                        frame.addView(editText);
+
 
 
                     Log.d("POSITION A UP", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " (x,y): " + "(" + String.valueOf(x) + "," + String.valueOf(y) + ")" + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")" + " textLeft: " + editText.getLeft() + " textTop: " + editText.getTop());
@@ -193,8 +209,24 @@ public class MemoActivity extends AppCompatActivity {
                     editTextParams.setMargins(editLeft, editTop, 0, 0);
                     dragView.setLayoutParams(layoutParams);
                     editText.setLayoutParams(editTextParams);
+                    if(editText.getTop() + view.getHeight()/2 < 0) {
+                        removeArea.setBackgroundColor(Color.RED);
+                    } else {
+                        removeArea.setBackgroundColor(0xFFa0a0a0);
+                    }
+
 
                     Log.d("POSITION B MOVE", " left: " + String.valueOf(left) + " top: " + String.valueOf(top) + " (x,y): " + "(" + String.valueOf(x) + "," + String.valueOf(y) + ")" + " old(x,y):" + "(" + String.valueOf(oldx) + "," + String.valueOf(oldy) + ")" + " viewleft: " + String.valueOf(dragView.getLeft() + (x - oldx)) + " viewtop: " + String.valueOf(dragView.getTop() + (y - oldy)) + " textLeft: " + editText.getLeft() + " textTop: " + editText.getTop());
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    Log.d("POSITION B UP", "gettop: " + String.valueOf(view.getTop()) + "top: " + String.valueOf(top)  + "frameTop: " + String.valueOf(frame.getTop()));
+
+                    if(editText.getTop() + view.getHeight()/2 < 0) {
+                        frame.removeView(view);
+                        frame.removeView(editText);
+                        removeArea.setBackgroundColor(0xFFa0a0a0);
+                    }
                     break;
 
             }

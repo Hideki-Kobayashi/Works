@@ -14,11 +14,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-    }
-
-    public void click(View v) {
         Intent i = new Intent(getApplication(), MemoActivity.class);
         startActivity(i);
+
     }
+
+
 
 }

@@ -19,7 +19,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".MemoActivity" />
-        <activity android:name=".MemoButton"></activity>
 
     </application>
 
