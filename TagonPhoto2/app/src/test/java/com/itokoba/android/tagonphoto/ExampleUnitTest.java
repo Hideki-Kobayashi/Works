@@ -1,4 +1,4 @@
-package com.lifeistech.android.tagonphoto;
+package com.itokoba.android.tagonphoto;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.lifeistech.android.tagonphoto;
+package com.itokoba.android.tagonphoto;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
